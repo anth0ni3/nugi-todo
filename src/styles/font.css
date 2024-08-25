@@ -1,0 +1,48 @@
+/* ===========typography======= */
+@layer base {
+
+  :root {
+    --text-display-lineBoxHeight: 1.4;
+    --text-display-size: 2.5rem;
+    --text-display-lineHeight: 1.4;
+    --text-display-weight: 600;
+
+    --text-title-size-large: 2rem;
+    --text-title-lineHeight-large: 1.5;
+    --text-title-weight-large: 600;
+
+    --text-title-size-medium: 1.25rem;
+    --text-title-lineHeight-medium: 1.6;
+    --text-title-weight-medium: 600;
+
+    --text-title-size-small: 1rem;
+    --text-title-lineHeight-small: 1.5;
+    --text-title-weight-small: 600;
+
+    --text-subtitle-size: 1.25rem;
+    --text-subtitle-lineHeight: 1.6;
+    --text-subtitle-weight: 500;
+
+    --text-body-size-large: 1rem;
+    --text-body-lineHeight-large: 1.5;
+
+    --text-body-size-medium: 0.875rem;
+    --text-body-lineHeight-medium: 1.4285;
+
+    --text-body-size-small: 0.75rem;
+    --text-body-lineHeight-small: 1.6666;
+
+    --text-caption-size: 0.75rem;
+    --text-caption-lineHeight: 1.3333;
+    --text-caption-weight: 500;
+
+    --text-codeBlock-size: 0.8125rem;
+    --text-codeBlock-lineHeight: 1.5385;
+    --text-codeBlock-weight: 500;
+
+    --text-codeInline-size: 0.9285em;
+    --text-codeInline-weight: 500;
+
+
+  }
+}

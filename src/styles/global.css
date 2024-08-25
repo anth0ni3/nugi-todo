@@ -1,0 +1,46 @@
+@import url(./colors.css);
+@import url(./font.css);
+@import url(./core.css);
+@import url("https://fonts.googleapis.com/css2?family=Urbanist:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  src: format();
+  font-family: "Urbanist";
+  font-style: normal;
+  font-weight: 100 200 300 400 500 600 700 800 900;
+  font-display: swap;
+}
+
+body {
+  font-size: 16px;
+  font-family: "Urbanist", system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  font-weight: 500;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  font-feature-settings: "kern";
+  font-kerning: normal;
+  word-break: break-word;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overscroll-behavior: none;
+  -webkit-overscroll-behaviour: none;
+}

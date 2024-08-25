@@ -1,0 +1,124 @@
+@layer components {
+  /* ==========button============= */
+  .button {
+    @apply relative inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-md text-base font-medium transition active:brightness-95 active:saturate-100 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .button-primary {
+    @apply bg-button-primary-bgColor hover:bg-button-primary-bgColor-hover disabled:bg-button-primary-bgColor-disabled active:bg-button-primary-bgColor-active text-button-primary-fgColor disabled:text-button-primary-iconColor border-button-primary-border hover:border-button-primary-border-hover active:border-button-primary-border-active disabled:border-button-primary-border-disabled border;
+  }
+
+  .button-outline {
+    @apply border-button-border text-button-fgColor bg-button-bgColor hover:border-button-border-hover hover:bg-button-bgColor-hover active:bg-button-bgColor-active disabled:border-button-border-disabled disabled:bg-button-bgColor-disabled border;
+  }
+
+  .button-ghost {
+    @apply border-button-ghost-border text-button-fgColor bg-button-ghost-bgColor hover:border-button-ghost-border-hover hover:text-button-fgColor hover:bg-button-ghost-bgColor-hover active:bg-button-ghost-bgColor-active disabled:text-button-ghost-fgColor-disabled border;
+  }
+
+  .button-ghost svg {
+    @apply text-button-ghost-iconColor hover:text-button-ghost-iconColor-hover focus:text-button-ghost-iconColor-active disabled:text-button-ghost-iconColor-disabled;
+  }
+
+  .button-link {
+    @apply text-button-ghost-fgColor disabled:text-button-ghost-fgColor-disabled !p-0 underline-offset-1 hover:underline;
+  }
+
+  .button-inactive {
+    @apply bg-button-inactive-bgColor text-button-inactive-fgColor border-button-inactive-border;
+  }
+
+  .button-danger {
+    @apply bg-button-danger-bgColor hover:!bg-button-danger-bgColor-hover disabled:bg-button-danger-bgColor-disabled active:bg-button-danger-bgColor-active text-button-danger-fgColor hover:text-button-danger-fgColor-hover disabled:text-button-danger-fgColor-disabled border-button-danger-border hover:border-button-danger-border-hover active:border-button-danger-border-active [&>svg]:text-button-danger-iconColor [&>svg]:hover:text-button-danger-iconColor-hover border;
+  }
+
+  .button-lg {
+    @apply h-10 gap-2 px-4 text-sm leading-10;
+  }
+
+  .button-md {
+    @apply h-8 gap-2 px-3 text-sm leading-8;
+  }
+
+  .button-sm {
+    @apply text-body-medium h-7 gap-1 px-2 leading-7;
+  }
+
+  .button-xs {
+    @apply text-body-small h-6 gap-1 px-1.5 leading-6;
+  }
+
+  /* ========icons========== */
+  .icon-lg {
+    @apply size-5;
+  }
+
+  .icon-md {
+    @apply size-5;
+  }
+
+  .icon-sm {
+    @apply size-4;
+  }
+
+  /* =====control======*/
+  .control {
+    @apply ring-border-accent-emphasis [&.is-focus]:border-border-accent-emphasis text-control-fgColor placeholder:text-control-fgColor-placeholder border-control-border inline-flex w-full items-center gap-1 whitespace-nowrap rounded-md border ring-inset transition duration-200 [&.is-focus]:outline-none [&.is-focus]:ring-[1px] [&_input::placeholder]:opacity-60;
+
+    /* & svg, */
+    & .prefix,
+    & .suffix,
+    & .number-step {
+      @apply text-control-iconColor;
+    }
+  }
+
+  .control-lg {
+    /* @apply h-10 gap-1.5 text-sm leading-9; */
+    @apply text-body-medium h-10 gap-1.5 px-4 leading-9;
+  }
+
+  .control-md {
+    /* @apply h-8 gap-1 text-sm leading-7; */
+    @apply text-body-medium h-8 gap-1 px-3 leading-7;
+  }
+
+  .control-sm {
+    /* @apply h-7 gap-0.5 text-sm leading-6; */
+    @apply text-body-medium h-7 gap-0.5 px-2 leading-6;
+  }
+
+  .control-field-disabled {
+    @apply bg-control-bgColor-disabled border-control-border-disabled text-control-fgColor-disabled cursor-not-allowed;
+  }
+
+  .control-field-error {
+    @apply !border-control-border-danger !bg-control-danger-bgColor-hover hover:!bg-control-danger-bgColor-hover active:!bg-control-danger-bgColor-active [&.is-focus]:!border-control-border-danger;
+  }
+
+  .control-transparent {
+    @apply border-control-transparent-border bg-control-transparent-bgColor hover:border-control-transparent-border-hover hover:bg-control-transparent-bgColor-hover active:bg-control-transparent-bgColor-active border;
+  }
+
+  .control-checked {
+    @apply border-control-checked-border bg-control-checked-bgColor hover:border-control-checked-border-hover hover:bg-control-checked-bgColor-hover active:bg-control-checked-bgColor-active active:border-control-checked-border-active disabled:bg-control-checked-bgColor-disabled disabled:text-control-checked-fgColor-disabled disabled:border-control-checked-border-disabled border;
+  }
+
+  /* =====card====== */
+
+  .card {
+    @apply bg-bgColor-white border-border-default rounded-xl border p-4;
+  }
+
+  .card-interactive {
+    @apply bg-bgColor-muted ring-border-muted ring-1 ring-inset;
+  }
+
+  .popover {
+    @apply bg-bgColor-default border-border-default rounded-lg border p-2;
+  }
+
+  .popover-item {
+    @apply button-md control-transparent;
+  }
+}
