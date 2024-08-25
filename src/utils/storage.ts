@@ -1,5 +1,4 @@
 import Cookie from 'js-cookie';
-import type {CookieAttributes} from 'js-cookie';
 
 export const storage = {
   localStorage: {
@@ -12,10 +11,13 @@ export const storage = {
     has: (key: string): boolean => localStorage.getItem(key) !== null,
   },
   cookieStorage: {
-    set: <Item>(key: string, value: Item, options?: CookieAttributes) =>
-      Cookie?.set(key, String(value), options),
+    set: <Item>(
+      key: string,
+      value: Item,
+      options?: (typeof Cookie)['attributes']
+    ) => Cookie?.set(key, String(value), options),
     get: (key: string) => Cookie?.get(key) || undefined,
-    remove: (key: string, options?: CookieAttributes): void =>
+    remove: (key: string, options?: (typeof Cookie)['attributes']): void =>
       Cookie.remove(key, options),
     has: (key: string): boolean => Boolean(Cookie.get(key)),
   },
