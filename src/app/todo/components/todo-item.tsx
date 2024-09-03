@@ -1,77 +1,135 @@
 import React from 'react';
-import {Reorder, useDragControls} from 'framer-motion';
-import {CheckIcon, GripIcon, PenIcon, XIcon} from 'lucide-react';
-
-// import { useFetcher} from 'react-router-dom';
+import {CheckIcon, PenIcon, XIcon} from 'lucide-react';
+import {useFetcher} from 'react-router-dom';
 
 import {Todo} from '~/entities/todos';
 import {Button} from '~/ui/button';
 import {Checkbox} from '~/ui/checkbox';
 import {Input} from '~/ui/input';
 
-export function TodoItem({todo}: {todo: Todo}) {
-  const controls = useDragControls();
-  // const fetcher = useFetcher();
+export function TodoItem({
+  todo,
+  setShowAddTodo,
+  setOptimisticTodos,
+}: {
+  todo: Partial<Todo>;
+  setShowAddTodo?: React.Dispatch<React.SetStateAction<boolean>>;
+  setOptimisticTodos?: React.Dispatch<React.SetStateAction<Partial<Todo>[]>>;
+}) {
+  const fetcher = useFetcher();
   const [isEditing, setIsEditing] = React.useState(!todo?.title || false);
+  const [title, setTitle] = React.useState(todo.title || '');
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const [isCompleted, setIsCompleted] = React.useState(todo.isCompleted);
-  const [title, setTitle] = React.useState(todo.title);
 
-  // TODO: Add fetcher to update the todo item. use optimistic update
+  const isCompleted = fetcher.formData
+    ? // ? // use optimistic value if submitting
+      fetcher.formData?.get('isCompleted') === 'on'
+    : // fall back to the database state
+      todo.isCompleted;
 
-  // TODO: remember to convert to json before sending to the backend
+  React.useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
+
+  const handleAddTodo = () => {
+    if (todo.id === 'new') {
+      const tempId = `temp-${Date.now()}`;
+      setOptimisticTodos?.(prev => [
+        ...prev,
+        {id: tempId, title, isCompleted: false},
+      ]);
+      fetcher.submit(
+        {
+          title,
+          intent: 'add',
+          tempId, // Add this line
+        },
+        {
+          method: 'post',
+        }
+      );
+      setShowAddTodo?.(false);
+      setTitle('');
+    }
+  };
 
   return (
-    <Reorder.Item
-      value={todo}
-      className="group/item flex h-12 items-center gap-1"
-      dragListener={false}
-      dragControls={controls}
-    >
+    <div className="group/item flex h-10 items-center gap-1">
       {isEditing ? (
-        // <fetcher.Form method="post">
-        <Input
-          ref={inputRef}
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          className="pr-0.5"
-          suffix={
-            <Button
-              variant="ghost"
-              size="sm"
-              disabled={!title}
-              onClick={() => {
-                setIsEditing(false);
-                // update todo
-                // optimistic update
-                // update todos
-              }}
-              icon
-            >
-              <CheckIcon className="icon-sm text-control-iconColor" />
-            </Button>
-          }
-        />
-      ) : (
-        // </fetcher.Form>
         <>
-          <button
-            className="grid place-content-center"
-            onPointerDown={e => controls.start(e)}
-          >
-            <GripIcon className="size-3.5 text-control-iconColor opacity-60" />
-          </button>
-          {/* TODO: mark todo as completed. use optimistic update */}
-          <Checkbox
-            className="mr-1"
-            onCheckedChange={v =>
-              setIsCompleted(v === 'indeterminate' ? false : v)
+          <input type="hidden" name="id" value={todo.id} />
+          <Input
+            ref={inputRef}
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            className="w-full px-0.5"
+            name="title"
+            prefix={
+              <Button
+                variant="ghost"
+                size="sm"
+                icon
+                type="button"
+                onClick={() => {
+                  setIsEditing(false);
+                  setShowAddTodo?.(false);
+                }}
+              >
+                <XIcon className="icon-sm text-control-iconColor" />
+              </Button>
             }
-            checked={isCompleted}
+            suffix={
+              <Button
+                variant="ghost"
+                size="sm"
+                form="update-title"
+                disabled={!title || title === todo.title}
+                onClick={() => {
+                  setIsEditing(false);
+                  // add todo
+                  if (todo.id === 'new') {
+                    handleAddTodo();
+                    return;
+                  }
+                  // update todo
+                  fetcher.submit(
+                    {
+                      title,
+                      id: todo.id!,
+                      intent: 'update-title',
+                    },
+                    {
+                      method: 'post',
+                    }
+                  );
+                }}
+                icon
+              >
+                <CheckIcon className="icon-sm text-control-iconColor" />
+              </Button>
+            }
           />
+        </>
+      ) : (
+        <>
+          {/* mark todo as completed. use optimistic update */}
+          <fetcher.Form method="post">
+            <input type="hidden" name="intent" value="update-completed" />
+            <input type="hidden" name="id" value={todo.id} />
+            <Checkbox
+              className="mr-1"
+              defaultChecked={isCompleted}
+              name="isCompleted"
+              type="submit"
+            />
+          </fetcher.Form>
           <p
-            className="text-body-large"
-            style={{textDecoration: isCompleted ? 'line-through' : 'none'}}
+            className="text-body-medium font-medium"
+            style={{
+              textDecoration: isCompleted ? 'line-through' : 'none',
+            }}
           >
             {title}
           </p>
@@ -81,20 +139,33 @@ export function TodoItem({todo}: {todo: Todo}) {
             icon
             onClick={() => {
               setIsEditing(true);
-              inputRef.current?.focus();
             }}
             className="ml-auto opacity-0 transition-opacity group-hover/item:opacity-100"
           >
             <PenIcon className="icon-sm text-control-iconColor" />
           </Button>
+
           <Button
             size="sm"
             variant="ghost"
             icon
             onClick={() => {
-              //delete todo
-              //optimistic update
-              //update todos
+              setOptimisticTodos?.(prev => {
+                return prev.filter(t => t.id !== todo.id);
+              });
+              //we should wrap this in a form but we're using it here so we can use optimistic todos
+              {
+                todo.id !== 'new' &&
+                  fetcher.submit(
+                    {
+                      id: todo.id!,
+                      intent: 'delete',
+                    },
+                    {
+                      method: 'post',
+                    }
+                  );
+              }
             }}
             className="!text-button-danger-fgColor  opacity-0 transition-opacity group-hover/item:opacity-100"
           >
@@ -102,6 +173,6 @@ export function TodoItem({todo}: {todo: Todo}) {
           </Button>
         </>
       )}
-    </Reorder.Item>
+    </div>
   );
 }
