@@ -20,6 +20,7 @@ export async function loader() {
   // const url = new URL(request.url);
   // const status = url.searchParams.get('status');
   const res = await getAllTodos();
+  console.log(res);
   return {todos: res?.data?.data};
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {replace, RouteObject} from 'react-router-dom';
+import {RouteObject} from 'react-router-dom';
 
 const AuthLayout = React.lazy(() =>
   import('./components/layout').then(module => ({default: module.AuthLayout}))
