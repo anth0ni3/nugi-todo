@@ -12,6 +12,28 @@ export const api = createApi({
         method: 'POST',
         body: todo,
       }),
+      async onQueryStarted(newTodo, {dispatch, queryFulfilled}) {
+        const patchResult = dispatch(
+          api.util.updateQueryData('getTodos', undefined, draft => {
+            draft.data.push({...newTodo, id: Date.now().toString()});
+          })
+        );
+        try {
+          const {data: createdTodo} = await queryFulfilled;
+          dispatch(
+            api.util.updateQueryData('getTodos', undefined, draft => {
+              const index = draft.data.findIndex(
+                todo => todo.id === newTodo.id
+              );
+              if (index !== -1) {
+                draft.data[index] = createdTodo;
+              }
+            })
+          );
+        } catch {
+          patchResult.undo();
+        }
+      },
       invalidatesTags() {
         return [{type: 'Todos', id: 'all'}];
       },
@@ -22,12 +44,10 @@ export const api = createApi({
         url: 'todos',
         method: 'GET',
       }),
-      providesTags(__, _, ___) {
-        return [
-          {type: 'Todos', id: 'all'},
-          // {type: 'Todos', id: arg},
-        ];
-      },
+      providesTags: [
+        {type: 'Todos', id: 'all'},
+        // {type: 'Todos', id: arg},
+      ],
     }),
     updateTodo: build.mutation({
       query: todo => ({
@@ -35,6 +55,23 @@ export const api = createApi({
         method: 'PUT',
         body: todo,
       }),
+      async onQueryStarted({id, ...patch}, {dispatch, queryFulfilled}) {
+        console.log('updateTodo', id, patch);
+        const patchResult = dispatch(
+          api.util.updateQueryData('getTodos', undefined, draft => {
+            const todoToUpdate = draft.data.find(t => t.id === id);
+            if (todoToUpdate) {
+              Object.assign(todoToUpdate, patch);
+            }
+          })
+        );
+        console.log('patchResult', patchResult);
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
       invalidatesTags(_, __, arg) {
         return [
           {type: 'Todos', id: arg.id},
@@ -47,12 +84,22 @@ export const api = createApi({
         url: `todos/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags(_, __, arg) {
-        return [
-          {type: 'Todos', id: arg.id},
-          {type: 'Todos', id: 'all'},
-        ];
+      async onQueryStarted(id, {dispatch, queryFulfilled}) {
+        const patchResult = dispatch(
+          api.util.updateQueryData('getTodos', undefined, draft => {
+            const index = draft.data.findIndex(todo => todo.id === id);
+            if (index !== -1) {
+              draft.data.splice(index, 1);
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
       },
+      invalidatesTags: [{type: 'Todos', id: 'all'}],
     }),
   }),
 });

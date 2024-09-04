@@ -12,7 +12,7 @@ export function StatusFilter() {
   const [searchParams, setSearchParams] = useSearchParams();
   return (
     <Select
-      onValueChange={value =>
+      onValueChange={value => {
         setSearchParams(
           prev => {
             if (value === 'all') {
@@ -25,8 +25,8 @@ export function StatusFilter() {
           {
             replace: true,
           }
-        )
-      }
+        );
+      }}
       value={searchParams.get('status') || 'all'}
     >
       <SelectTrigger className="ml-auto w-32">

@@ -20,21 +20,21 @@ const saveTodos = (todos: Todo[]) => {
 
 export const handlers = [
   // GET all todos
-  http.get('/api/todos', async () => {
-    // const searchParams = new URLSearchParams(request.url.split('?')[1]);
-    // const status = searchParams.get('status');
+  http.get('/api/todos', async ({request}) => {
+    const searchParams = new URLSearchParams(request.url.split('?')[1]);
+    const status = searchParams.get('status');
     await wait();
     let todos = getTodos();
-    // switch (status) {
-    //   case 'completed':
-    //     todos = todos.filter(todo => todo.isCompleted);
-    //     break;
-    //   case 'ongoing':
-    //     todos = todos.filter(todo => !todo.isCompleted);
-    //     break;
-    //   default:
-    //     break;
-    // }
+    switch (status) {
+      case 'completed':
+        todos = todos.filter(todo => todo.isCompleted);
+        break;
+      case 'ongoing':
+        todos = todos.filter(todo => !todo.isCompleted);
+        break;
+      default:
+        break;
+    }
     return HttpResponse.json({
       data: todos,
       message: 'Todos returned succesfully',
